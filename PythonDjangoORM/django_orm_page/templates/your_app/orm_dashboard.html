@@ -1,0 +1,43 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Django ORM — справочник запросов</title>
+    <link rel="stylesheet" href="{% static 'your_app/css/orm.css' %}">
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-inner">
+            <a class="brand" href="#top"><span class="brand-mark">D</span><span>Django ORM <small>Практический справочник</small></span></a>
+            <span class="status"><i></i> Данные из базы</span>
+        </div>
+    </header>
+    <main id="top" class="container">
+        <section class="hero">
+            <div class="eyebrow">DATABASE • QUERYSET • ORM</div>
+            <h1>Запросы Django ORM</h1>
+            <p>Примеры запросов, их результаты и соответствующий SQL — на одной странице.</p>
+            <div class="hero-stats"><div><strong>{{ sections|length }}</strong><span>примеров</span></div><div><strong>20</strong><span>строк максимум в таблице</span></div><div><strong>SQL</strong><span>можно раскрыть</span></div></div>
+        </section>
+        <nav class="jump-nav" aria-label="Разделы">
+            <a href="#all">Чтение данных</a><a href="#filter">Фильтрация</a><a href="#aggregate">Агрегация</a>
+        </nav>
+        <div class="section-heading" id="all"><div><span class="section-kicker">01 / QUERYSET</span><h2>Результаты запросов</h2></div><p>Таблицы содержат реальные данные вашей базы.</p></div>
+        <div class="cards">
+        {% for section in sections %}
+            <article class="query-card"{% if section.anchor %} id="{{ section.anchor }}"{% endif %}>
+                <div class="card-head"><div><span class="card-label">ORM METHOD</span><h3>{{ section.title }}</h3></div><span class="count-pill">{{ section.count }} строк</span></div>
+                <p class="description">{{ section.description }}</p>
+                {% if section.rows %}
+                <div class="table-wrap"><table><thead><tr>{% for column in section.columns %}<th>{{ column }}</th>{% endfor %}</tr></thead><tbody>{% for row in section.rows %}<tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>
+                {% else %}<div class="empty">Записей по этому условию нет.</div>{% endif %}
+                {% if section.sql %}<details><summary>Посмотреть SQL-запрос</summary><pre>{{ section.sql }}</pre></details>{% endif %}
+            </article>
+        {% endfor %}
+        </div>
+        <footer>Учебная страница Django ORM <span>•</span> Данные не изменяются при просмотре</footer>
+    </main>
+</body>
+</html>
